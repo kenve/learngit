@@ -28,7 +28,7 @@ $ git reflog
 $ git diff HEAD -- test.md
 ```
 
-##　撤销修改
+## 撤销修改
 
 Git会告诉你，`git checkout -- file`可以丢弃工作区的修改：
 ```bash
@@ -256,5 +256,177 @@ $ git branch --set-upstream dev origin/dev
 
 ## 标签管理
 发布一个版本时，我们通常先在版本库中打一个标签，这样，就唯一确定了打标签时刻的版本。将来无论什么时候，取某个标签的版本，就是把那个打标签的时刻的历史版本取出来。所以，标签也是版本库的一个快照。
-
 Git的标签虽然是版本库的快照，但其实它就是指向某个commit的指针（跟分支很像对不对？但是分支可以移动，标签不能移动），所以，创建和删除标签都是瞬间完成的。
+#### 创建标签
+在Git中打标签非常简单，首先，切换到需要打标签的分支上`$ git checkout master`,然后，敲命令`git tag <name>`就可以打一个新标签：
+```bash
+$ git tag v1.0
+```
+可以用命令`git tag`查看所有标签。
+默认标签是打在最新提交的commit上的。有时候，如果忘了打标签，比如，现在已经是周五了，但应该在周一打的标签没有打，怎么办？
+方法是找到历史提交的`commit id`,使用`$ git tag <tag-name> <commit-id>`，然后打上就可以了：
+```bash
+$ git log --pretty=oneline --abbrev-commit
+
+$ git tag v0.9 6224937
+```
+注意，标签不是按时间顺序列出，而是按字母排序的。可以用`git show <tagname>`查看标签信息：
+还可以创建带有说明的标签，用`-a`指定标签名，`-m`指定说明文字：
+```bash
+$ git tag -a v0.1 -m "version 0.1 released" 3628164
+```
+还可以通过`-s`用私钥签名一个标签:
+```bash
+$ git tag -s v0.2 -m "signed version 0.2 released" fec145a
+```
+签名采用PGP签名，因此，必须首先安装gpg（GnuPG），如果没有找到gpg，或者没有gpg密钥对，就会报错：
+如果报错，请参考GnuPG帮助文档配置Key,[GitHub GPG key配置](https://github.com/settings/keys)。
+
+小结:
+
+* 命令git tag <name>用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+* git tag -a <tagname> -m "blablabla..."可以指定标签信息；
+* git tag -s <tagname> -m "blablabla..."可以用PGP签名标签；
+* 命令git tag可以查看所有标签。
+
+#### 操作标签
+如果标签打错了，也可以使用`$ git tag -d <name>`删除：
+```bash
+$ git tag -d v0.1
+```
+因为创建的标签都只存储在本地，不会自动推送到远程。所以，打错的标签可以在本地安全删除。
+如果要推送某个标签到远程，使用命令`git push origin <tagname>`：
+```bash
+$ git push origin v1.0
+```
+或者，一次性推送全部尚未推送到远程的本地标签：
+```bash
+$ git push origin --tags
+```
+如果标签已经推送到远程，要删除远程标签就麻烦一点，先从本地删除：
+```bash
+$ git tag -d v0.9
+```
+然后，从远程删除。删除命令也是push，但是格式如下：
+```bash
+$ git push origin :refs/tags/v0.9
+```
+小结：
+
+* 命令`git push origin <tagname>`可以推送一个本地标签；
+* 命令`git push origin --tags`可以推送全部未推送过的本地标签；
+* 命令`git tag -d <tagname>`可以删除一个本地标签；
+* 命令`git push origin :refs/tags/<tagname>`可以删除一个远程标签。
+
+## 自定义Git
+#### 忽略文件
+
+忽略某些文件时，需要编写`.gitignore`,查看[Github所有配置文件](https://github.com/github/gitignore)；
+`.gitignore`文件本身要放到版本库里，并且可以对`.gitignore`做版本管理！
+```bash
+# Windows:
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Python:
+*.py[cod]
+*.so
+*.egg
+dist
+build
+```
+忽略文件的原则是：
+
+* 忽略操作系统自动生成的文件，比如缩略图等；
+* 忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的.class文件；
+* 忽略你自己的带有敏感信息的配置文件，比如存放口令的配置文件。
+
+#### 配置别名
+如果敲git st就表示git status那就简单多了。
+我们只需要敲一行命令，告诉Git，以后`st`就表示`status`：
+```bash
+$ git config --global alias.st status
+```
+当然还有别的命令可以简写，很多人都用`co`表示`checkout`，`ci`表示`commit`，`br`表示`branch`：
+```bash
+$ git config --global alias.co checkout
+$ git config --global alias.ci commit
+$ git config --global alias.br branch
+```
+以后提交就可以简写成：
+```bash
+$ git ci -m "bala bala bala..."
+```
+`--global`参数是全局参数，也就是这些命令在这台电脑的所有Git仓库下都有用。
+我们知道，命令`git reset HEAD file`可以把暂存区的修改撤销掉（unstage），重新放回工作区。既然是一个unstage操作，就可以配置一个`unstage`别名：
+```bash
+$ git config --global alias.unstage 'reset HEAD'
+```
+配置一个git last，让其显示最后一次提交信息：
+```bash
+$ git config --global alias.last 'log -1'
+```
+甚至还有人丧心病狂地把lg配置成了：
+```bash
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+```
+
+**配置文件**
+配置Git的时候，加上`--global`是针对当前用户起作用的，如果不加，那只针对当前的仓库起作用。
+
+配置文件放哪了？每个仓库的Git配置文件都放在`.git/config`文件中。
+别名就在`[alias]`后面，要删除别名，直接把对应的行删掉即可。
+而当前用户的Git配置文件放在用户主目录下的一个隐藏文件`.gitconfig`中：
+配置别名也可以直接修改这个文件，如果改错了，可以删掉文件重新通过命令配置。
+
+
+## 搭建Git服务器
+GitHub就是一个免费托管开源代码的远程仓库。但是对于某些视源代码如生命的商业公司来说，既不想公开源代码，又舍不得给GitHub交保护费，那就只能自己搭建一台Git服务器作为私有仓库使用。
+
+搭建Git服务器需要准备一台运行Linux的机器，强烈推荐用Ubuntu或Debian，这样，通过几条简单的`apt`命令就可以完成安装。
+
+假设你已经有`sudo`权限的用户账号，下面，正式开始安装。
+
+第一步，安装git：
+```bash
+$ sudo apt-get install git
+```
+第二步，创建一个`git`用户，用来运行`git`服务：
+```bash
+$ sudo adduser git
+```
+第三步，创建证书登录：
+收集所有需要登录的用户的公钥，就是他们自己的`id_rsa.pub`文件，把所有公钥导入到`/home/git/.ssh/authorized_keys`文件里，一行一个。
+
+第四步，初始化Git仓库：
+先选定一个目录作为Git仓库，假定是`/srv/sample.git`，在`/srv`目录下输入命令：
+```bash
+$ sudo git init --bare sample.git
+```
+Git就会创建一个裸仓库，裸仓库没有工作区，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以`.git`结尾。然后，把owner改为`git`：
+```bash
+$ sudo chown -R git:git sample.git
+```
+第五步，禁用shell登录：
+出于安全考虑，第二步创建的`git`用户不允许登录shell，这可以通过编辑`/etc/passwd`文件完成。找到类似下面的一行：
+```bash
+git:x:1001:1001:,,,:/home/git:/bin/bash
+```
+改为：
+```bash
+git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell
+```
+这样，`git`用户可以正常通过ssh使用git，但无法登录shell，因为我们为`git`用户指定的`git-shell`每次一登录就自动退出。
+
+第六步，克隆远程仓库：
+现在，可以通过`git clone`命令克隆远程仓库了，在各自的电脑上运行：
+```bash
+$ git clone git@server:/srv/sample.git
+```
+
+#### 管理公钥
+如果团队很小，把每个人的公钥收集起来放到服务器的`/home/git/.ssh/authorized_keys`文件里就是可行的,如果团队有几百号人，就没法这么玩了，这时，可以用[Gitosis](https://github.com/res0nat0r/gitosis)来管理公钥。
+#### 管理权限
+要方便管理公钥，用[Gitosis](https://github.com/res0nat0r/gitosis)；
+要像SVN那样变态地控制权限，用[Gitolite](https://github.com/sitaramc/gitolite)。
