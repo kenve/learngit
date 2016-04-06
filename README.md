@@ -87,5 +87,54 @@ git push -u origin master
 假设远程库已经准备好了，下一步是用命令`git clone`克隆一个本地库：
 ```bash
 $ git clone git@github.com:kenve/gitskills.git
-#$ git clone https://github.com/reactjs/redux.git 
+# $ git clone https://github.com/reactjs/redux.git 
 ```
+
+## 分支管理
+#### 创建与合并分支
+创建dev分支，然后切换到dev分支：
+```bash
+$ git checkout -b dev
+```
+`git checkout`命令加上`-b`参数表示创建并切换，相当于以下两条命令：
+```bash
+$ git branch dev
+$ git checkout dev
+```
+然后，用`git branch`命令查看当前分支：
+```bash
+$ git branch
+```
+`git branch`命令会列出所有分支，当前分支前面会标一个 `*` 号。
+切换分支用`$ git checkout name` 命令。
+
+`git merge`命令用于合并指定分支到当前分支,把 `dev` 分支的工作成果合并到 `master` 分支上：
+```bash
+$ git merge dev
+```
+因为创建、合并和删除分支非常快，所以Git鼓励你使用分支完成某个任务，合并后再删掉分支，这和直接在`master`分支上工作效果是一样的，但过程更安全。
+* 小结
+Git鼓励大量使用分支：
+
+查看分支：`git branch`
+
+创建分支：`git branch <name>`
+
+切换分支：`git checkout <name>`
+
+创建+切换分支：`git checkout -b <name>`
+
+合并某分支到当前分支：`git merge <name>`
+
+删除分支：`git branch -d <name>`
+
+#### 解决冲突
+Git用`<<<<<<<`，`=======`，`>>>>>>>` 标记出不同分支的内容。
+
+当Git无法自动合并分支时，就必须首先解决冲突。解决冲突后，再提交，合并完成。
+
+用`git log --graph`命令可以看到分支合并图。
+```bash
+$ git log --graph --pretty=oneline --abbrev-commit
+```
+#### 分支管理策略
