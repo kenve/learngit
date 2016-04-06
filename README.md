@@ -22,3 +22,8 @@ $ git reset --hard 405e7f6
 ```bash
 $ git reflog
 ```
+
+提交后，用`git diff HEAD -- test.md`命令可以查看工作区和版本库里面最新版本的区别：
+```bash
+$ git diff HEAD -- test.md
+```
