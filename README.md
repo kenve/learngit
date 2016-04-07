@@ -430,3 +430,8 @@ $ git clone git@server:/srv/sample.git
 #### 管理权限
 要方便管理公钥，用[Gitosis](https://github.com/res0nat0r/gitosis)；
 要像SVN那样变态地控制权限，用[Gitolite](https://github.com/sitaramc/gitolite)。
+
+## 更多
+
+* [Pro Git 2 中文版](https://git-scm.com/book/zh/v2)
+* [廖雪峰老师Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
