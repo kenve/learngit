@@ -5,6 +5,12 @@ $ git config --global user.name "Your Name"
 $ git config --global user.email "email@example.com"
 ```
 因为Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。你也许会担心，如果有人故意冒充别人怎么办？这个不必担心，首先我们相信大家都是善良无知的群众，其次，真的有冒充的也是有办法可查的。
+自定义Git
+让Git显示颜色，会让命令输出看起来更醒目：
+```bash
+$ git config --global color.ui true
+```
+更多配置查看[Pro Git 自定义Git配置](https://git-scm.com/book/zh/v2/%E8%87%AA%E5%AE%9A%E4%B9%89-Git-%E9%85%8D%E7%BD%AE-Git)
 
 ## 创建版本库
 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。
@@ -468,5 +474,5 @@ $ git clone git@server:/srv/sample.git
 
 ## 更多
 
-* [Pro Git 2 中文版](https://git-scm.com/book/zh/v2)
+* [Pro Git 2nd Edition (2014) 中文版](https://git-scm.com/book/zh/v2)
 * [廖雪峰老师Git教程](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000)
