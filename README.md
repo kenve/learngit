@@ -301,7 +301,7 @@ $ git checkout -b dev origin/dev
 ```
 他就可以在`dev`上继续修改，然后，时不时地把`dev`分支push到远程。而碰巧你也对同样的文件作了修改，并试图推送：`$ git push origin dev`。推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，先用`git pull`把最新的提交从`origin/dev`抓下来，然后，在本地合并，解决冲突，再推送：
 
-`git pull`也失败了，原因是没有指定本地`dev`分支与远程`origin/dev`分支的链接，根据提示，设置`dev`和`origin/dev`的链接：
+`git pull`也失败了，原因是没有指定本地`dev`分支与远程`origin/dev`分支的链接，根据提示，设置`dev`和 `origin/dev` 的链接：
 ```bash
 $ git branch --set-upstream dev origin/dev
 ```
@@ -311,7 +311,7 @@ $ git branch --set-upstream dev origin/dev
 1. 首先，可以试图用`git push origin branch-name`推送自己的修改；
 2. 如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
 3. 如果合并有冲突，则解决冲突，并在本地提交；
-4. 没有冲突或者解决掉冲突后，再用`git push origin branch-nam`e推送就能成功！
+4. 没有冲突或者解决掉冲突后，再用 `git push origin branch-name` 推送就能成功！
 5. 从远程端获取最新版到本地 `$ git fetch origin branch-name`
 如果`git pull`提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令`git branch --set-upstream branch-name origin/branch-name`。
 
@@ -320,7 +320,7 @@ $ git branch --set-upstream dev origin/dev
 * 查看远程库信息，使用`git remote -v`；
 * 本地新建的分支如果不推送到远程，对其他人就是不可见的；
 * 从本地推送分支，使用`git push origin branch-name`，如果推送失败，先用`git pull`抓取远程的新提交；
-* 在本地创建和远程分支对应的分支，使用`git checkout -b branch-name origin/branch-name`，本地和远程分支的名称最好一致；
+* 在本地创建和远程分支对应的分支，使用`git checkout -b branch-name origin/branch-name` ，本地和远程分支的名称最好一致；
 * 建立本地分支和远程分支的关联，使用`git branch --set-upstream branch-name origin/branch-name`；
 * 从远程抓取分支，使用`git pull`，如果有冲突，要先处理冲突。 
 
