@@ -31,7 +31,7 @@ $ git config --global color.ui true
 ## 查看状态
 
 * 要随时掌握工作区的状态，使用`git status`命令。
-* 如果`git statu`s告诉你有文件被修改过，用`git diff`可以查看修改内容。
+* 如果 `git status` 告诉你有文件被修改过，用`git diff`可以查看修改内容。
 
 ## 查看log
 `git log`命令显示从最近到最远的提交日志
@@ -264,7 +264,35 @@ $ git push origin dev
 
 总之，就是在Git中，分支完全可以在本地自己藏着玩，是否推送，视你的心情而定！
 
+**更新分支：**
+`git fetch` 命令与一个远程的仓库交互，并且将远程仓库中有但是在当前仓库的没有的所有信息拉取下来然后存储在你本地数据库中。
+从远程端获取最新版到本地:
+```bash
+$ git fetch origin master 
+```
+比较本地仓库与远程参考区别：
+
+```bash
+$ git log -p master.. origin/master
+```
+把远程端下载下来的代码合并到本地仓库，远程和本地合并：
+```bash
+$ git merge origin/master
+```
+方式二：可以下载 `master` 为新分支 `temp` 然后在合并分支,然后删除 `temp`
+```bash
+# 1
+$ git fetch origin master:temp
+# 2
+$ git diff temp
+# 3
+$ git merge temp 
+# 4
+$ git branch -d temp
+```
+
 **抓取分支**
+`git pull` 命令基本上就是 `git fetch` 和 `git merge` 命令的组合体，Git 从你指定的远程仓库中抓取内容，然后马上尝试将其合并进你所在的分支中。
 多人协作时，大家都会往`master`和`dev`分支上推送各自的修改。
 当你的小伙伴从远程库clone时，默认情况下，你的小伙伴只能看到本地的`master`分支。
 现在，你的小伙伴要在dev分支上开发，就必须创建远程origin的dev分支到本地:
@@ -284,6 +312,7 @@ $ git branch --set-upstream dev origin/dev
 2. 如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
 3. 如果合并有冲突，则解决冲突，并在本地提交；
 4. 没有冲突或者解决掉冲突后，再用`git push origin branch-nam`e推送就能成功！
+5. 从远程端获取最新版到本地 `$ git fetch origin branch-name`
 如果`git pull`提示“no tracking information”，则说明本地分支和远程分支的链接关系没有创建，用命令`git branch --set-upstream branch-name origin/branch-name`。
 
 **小结**
